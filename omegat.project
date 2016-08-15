@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <omegat>
     <project version="1.0">
-        <source_dir>seafile-docs</source_dir>
+        <source_dir>source</source_dir>
         <source_dir_excludes>
             <mask>**/.svn/**</mask>
             <mask>**/CSV/**</mask>
             <mask>**/.cvs/**</mask>
             <mask>**/desktop.ini</mask>
             <mask>**/Thumbs.db</mask>
+            <mask>**/.git/**</mask>
         </source_dir_excludes>
-        <target_dir>seafile-docs-ja</target_dir>
+        <target_dir>target</target_dir>
         <tm_dir>__DEFAULT__</tm_dir>
         <glossary_dir>__DEFAULT__</glossary_dir>
         <glossary_file>__DEFAULT__</glossary_file>
