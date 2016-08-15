@@ -1,0 +1,60 @@
+From bb0cd4c9e24cbefbbd7724fcd7ac75342459853a Mon Sep 17 00:00:00 2001
+From: Hiroshi Miura <miurahr@nttdata.co.jp>
+Date: Mon, 25 Jul 2016 15:17:03 +0900
+Subject: [PATCH] Use OS's proxy setting when running on Linux and Windows.
+
+-It also introduce Preference whether use system proxy settings or not.
+
+Signed-off-by: Hiroshi Miura <miurahr@linux.com>
+---
+ src/org/omegat/Main.java                       | 8 +++++++-
+ src/org/omegat/gui/dialogs/NewTeamProject.java | 2 +-
+ src/org/omegat/util/Preferences.java           | 2 ++
+ 3 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/src/org/omegat/Main.java b/src/org/omegat/Main.java
+index 130e992..08cb388 100644
+--- a/src/org/omegat/Main.java
++++ b/src/org/omegat/Main.java
+@@ -197,6 +197,12 @@ public class Main {
+         FilterMaster.setFilterClasses(PluginUtils.getFilterClasses());
+         Preferences.init();
+ 
++        if ((!Platform.isMacOSX()) && Preferences.isPreferenceDefault(Preferences.USE_SYSTEM_PROXY, true)) {
++            // Use system proxy setting.
++            // This automatically set http.proxyHost http.proxyPort from OS's proxy settings.
++            System.setProperty("java.net.useSystemProxies", "true");
++        }
++
+         int result;
+         try {
+             switch (runMode) {
+diff --git a/src/org/omegat/gui/dialogs/NewTeamProject.java b/src/org/omegat/gui/dialogs/NewTeamProject.java
+index 7494eb6..bcde89e 100644
+--- a/src/org/omegat/gui/dialogs/NewTeamProject.java
++++ b/src/org/omegat/gui/dialogs/NewTeamProject.java
+@@ -122,7 +122,7 @@ public class NewTeamProject extends javax.swing.JDialog {
+         if (StringUtil.isEmpty(url)) {
+             return;
+         }
+-        if (url.startsWith("git!")) {
++        if (url.startsWith("git!") || url.endsWith(".git")) {
+             detectedRepoOrProjectFileLabel.setText(OStrings.getString("TEAM_DETECTED_REPO_GIT"));
+             repoType = "git";
+             suggestLocalFolder();
+diff --git a/src/org/omegat/util/Preferences.java b/src/org/omegat/util/Preferences.java
+index c8984ea..e88c733 100644
+--- a/src/org/omegat/util/Preferences.java
++++ b/src/org/omegat/util/Preferences.java
+@@ -440,6 +440,8 @@ public class Preferences {
+     public static final String PROPERTY_SRX = "srx";
+     public static final String PROPERTY_FILTERS = "filters";
+ 
++    public static final String USE_SYSTEM_PROXY = "proxy";
++
+     /** Private constructor, because this file is singleton */
+     private Preferences() {
+     }
+-- 
+2.9.2
+

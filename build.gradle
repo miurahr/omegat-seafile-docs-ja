@@ -1,0 +1,11 @@
+// OmegaT plugin
+apply plugin: "org.omegat.gradle"
+dependencies {
+    // FIXME: here is ugly configuration for omegat plugin
+    omegat files('buildSrc/OmegaT.jar'),
+           fileTree('buildSrc/lib')
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.14.1'
+}
